@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Lilah Comerford</title>
+
+    <!-- Official PhotoSwipe CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/photoswipe@5/dist/photoswipe.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px 40px 40px 40px;
+        }
+
+        /* --- Header Styles --- */
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .site-header .brand-link {
+            display: inline-block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .site-header h1 {
+            font-size: 2.5rem;
+            font-weight: 500;
+        }
+
+        .site-nav {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .site-nav a {
+            text-decoration: none;
+            color: #333333;
+            font-size: 1rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            transition: color 0.2s ease;
+        }
+
+        .site-nav a:hover {
+            color: #999999;
+        }
+
+        @media (max-width: 600px) {
+            .site-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* --- Mobile nav toggle + drawer (same pattern as Zara Poon site) --- */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1002;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #333333;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 70%;
+            background-color: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            transform: translateX(-100%);
+            transition: transform 0.35s ease;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 28px;
+            padding: 40px;
+        }
+
+        .mobile-nav.is-open {
+            transform: translateX(0);
+        }
+
+        .mobile-nav a {
+            text-decoration: none;
+            color: #333333;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 70%;
+            right: 0;
+            z-index: 1000;
+        }
+
+        body.nav-open .mobile-nav-overlay {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .site-nav {
+                display: none;
+            }
+            .nav-toggle {
+                display: flex;
+            }
+        }
+
+        /* --- PhotoSwipe Overrides for White Lightbox --- */
+        .pswp {
+            --pswp-bg: #ffffff;
+            --pswp-icon-color: #333333;
+            --pswp-icon-color-secondary: #666666;
+        }
+        .pswp__img,
+        .pswp__img--placeholder {
+            background-color: #ffffff !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- Project list (title + flick-through per project) --- */
+        .projects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 70px;
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        /* --- Flick-through component ---
+             Images sit at their own natural aspect ratio inside a
+             fixed-height strip. The next image peeks in at the right edge;
+             clicking that peeking image slides it fully into view.
+             Clicking the already-active image opens it full-screen. */
+        .flick-viewport {
+            position: relative;
+            overflow: hidden;
+            height: min(65vh, 600px);
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .flick-track {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            gap: 8px;
+            transition: transform 0.6s ease;
+            will-change: transform;
+        }
+
+        .flick-slide {
+            flex-shrink: 0;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .flick-slide img {
+            height: 100%;
+            width: auto;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <a href="lilah-index.html" class="brand-link">
+            <h1>Lilah Comerford</h1>
+        </a>
+        <nav class="site-nav">
+            <a href="lilah-editorial-and-commissions.html">Editorial and Commissions</a>
+            <a href="lilah-portfolio.html">Portfolio</a>
+        </nav>
+        <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="lilah-editorial-and-commissions.html">Editorial and Commissions</a>
+        <a href="lilah-portfolio.html">Portfolio</a>
+    </nav>
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+    <div class="container">
+        <div class="projects-list">
+
+            <!--
+                PROJECT TEMPLATE
+                =================
+                1. Replace the h2 text with the project/shoot name.
+                2. Add one .flick-slide per image inside .flick-track — any
+                   number, and each can be a totally different aspect ratio.
+                3. Fill in data-pswp-width / data-pswp-height with each full-size
+                   image's real pixel dimensions (required for PhotoSwipe zoom).
+                4. Clicking a peeking image slides it into view; clicking the
+                   fully-visible image opens the full project set full-screen.
+            -->
+
+            <!-- Project 1 -->
+            <div class="project">
+                <h2 class="project-title">Portfolio Set One</h2>
+                <div class="flick-viewport">
+                    <div class="flick-track">
+                        <div class="flick-slide"
+                             data-full="media/contact-for-web2000x2000.png"
+                             data-pswp-width="2616" data-pswp-height="2616">
+                            <img src="media/contact-for-web.png" alt="Portfolio Set One, image 1">
+                        </div>
+                        <div class="flick-slide"
+                             data-full="media/khora-for-web2000x2000.png"
+                             data-pswp-width="2616" data-pswp-height="2616">
+                            <img src="media/khora-for-web.png" alt="Portfolio Set One, image 2">
+                        </div>
+                        <div class="flick-slide"
+                             data-full="media/MagicEraser_260717_112449-2000x2000.jpeg"
+                             data-pswp-width="2616" data-pswp-height="2616">
+                            <img src="media/MagicEraser_260717_112449.jpeg" alt="Portfolio Set One, image 3">
+                        </div>
+                        <div class="flick-slide"
+                             data-full="media/soft-s-for-web2000x2000.png"
+                             data-pswp-width="2616" data-pswp-height="2616">
+                            <img src="media/soft-s-for-web.png" alt="Portfolio Set One, image 4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project">
+                <h2 class="project-title">Portfolio Set Two</h2>
+                <div class="flick-viewport">
+                    <div class="flick-track">
+                        <div class="flick-slide"
+                             data-full="media/khora-for-web2000x2000.png"
+                             data-pswp-width="2616" data-pswp-height="2616">
+                            <img src="media/khora-for-web.png" alt="Portfolio Set Two, image 1">
+                        </div>
+                        <div class="flick-slide"
+                             data-full="media/soft-s-for-web2000x2000.png"
+                             data-pswp-width="2616" data-pswp-height="2616">
+                            <img src="media/soft-s-for-web.png" alt="Portfolio Set Two, image 2">
+                        </div>
+                        <div class="flick-slide"
+                             data-full="media/contact-for-web2000x2000.png"
+                             data-pswp-width="2616" data-pswp-height="2616">
+                            <img src="media/contact-for-web.png" alt="Portfolio Set Two, image 3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add more <div class="project">...</div> blocks here following the same pattern -->
+
+        </div>
+    </div>
+
+    <!-- Official PhotoSwipe JavaScript -->
+    <script type="module">
+        import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5/dist/photoswipe-lightbox.esm.js';
+
+        const lightbox = new PhotoSwipeLightbox({
+            pswpModule: () => import('https://unpkg.com/photoswipe@5/dist/photoswipe.esm.js'),
+            bgOpacity: 1,
+        });
+        lightbox.init();
+
+        // Set up every flick-through strip on the page independently.
+        document.querySelectorAll('.flick-viewport').forEach((viewport) => {
+            const track = viewport.querySelector('.flick-track');
+            const slides = Array.from(viewport.querySelectorAll('.flick-slide'));
+            let current = 0;
+
+            const pswpItems = slides.map((slide) => ({
+                src: slide.dataset.full,
+                w: parseInt(slide.dataset.pswpWidth, 10),
+                h: parseInt(slide.dataset.pswpHeight, 10),
+            }));
+
+            function goTo(index) {
+                current = index;
+                track.style.transform = `translateX(-${slides[index].offsetLeft}px)`;
+            }
+
+            slides.forEach((slide, i) => {
+                slide.addEventListener('click', () => {
+                    if (i === current) {
+                        lightbox.loadAndOpen(i, pswpItems);
+                    } else {
+                        goTo(i);
+                    }
+                });
+            });
+
+            goTo(0);
+            window.addEventListener('resize', () => goTo(current));
+        });
+
+        // --- Mobile nav drawer ---
+        const navToggle = document.getElementById('navToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+
+        function openNav() {
+            document.body.classList.add('nav-open');
+            mobileNav.classList.add('is-open');
+            navToggle.setAttribute('aria-expanded', 'true');
+        }
+        function closeNav() {
+            document.body.classList.remove('nav-open');
+            mobileNav.classList.remove('is-open');
+            navToggle.setAttribute('aria-expanded', 'false');
+        }
+
+        navToggle.addEventListener('click', () => {
+            document.body.classList.contains('nav-open') ? closeNav() : openNav();
+        });
+        mobileNavOverlay.addEventListener('click', closeNav);
+        mobileNav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeNav));
+    </script>
+</body>
+</html>

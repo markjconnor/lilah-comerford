@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lilah Comerford</title>
+
+    <!-- Official PhotoSwipe CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/photoswipe@5/dist/photoswipe.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px 40px 40px 40px;
+        }
+
+        /* --- Header Styles --- */
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .site-header .brand-link {
+            display: inline-block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .site-header h1 {
+            font-size: 2.5rem;
+            font-weight: 500;
+        }
+
+        .site-nav {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .site-nav a {
+            text-decoration: none;
+            color: #333333;
+            font-size: 1rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            transition: color 0.2s ease;
+        }
+
+        .site-nav a:hover {
+            color: #999999;
+        }
+
+        @media (max-width: 600px) {
+            .site-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* --- Mobile nav toggle + drawer  --- */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1002;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #333333;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 70%;
+            background-color: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            transform: translateX(-100%);
+            transition: transform 0.35s ease;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 28px;
+            padding: 40px;
+        }
+
+        .mobile-nav.is-open {
+            transform: translateX(0);
+        }
+
+        .mobile-nav a {
+            text-decoration: none;
+            color: #333333;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 70%;
+            right: 0;
+            z-index: 1000;
+        }
+
+        body.nav-open .mobile-nav-overlay {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .site-nav {
+                display: none;
+            }
+            .nav-toggle {
+                display: flex;
+            }
+        }
+
+        /* --- PhotoSwipe Overrides for White Lightbox --- */
+        .pswp {
+            --pswp-bg: #ffffff;
+            --pswp-icon-color: #333333;
+            --pswp-icon-color-secondary: #666666;
+        }
+        .pswp__img,
+        .pswp__img--placeholder {
+            background-color: #ffffff !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- Flick-through component ---
+             Images sit at their own natural aspect ratio inside a
+             fixed-height strip. The next image peeks in at the right edge;
+             clicking that peeking image slides it fully into view.
+             Clicking the already-active image opens it full-screen. */
+        .flick-viewport {
+            position: relative;
+            overflow: hidden;
+            height: min(70vh, 640px);
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .flick-track {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            gap: 8px;
+            transition: transform 0.6s ease;
+            will-change: transform;
+        }
+
+        .flick-slide {
+            flex-shrink: 0;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .flick-slide img {
+            height: 100%;
+            width: auto;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        /* Homepage-specific: vertically balance the single flick display
+           under the header since there's no page title/list above it. */
+        .homepage-feature {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 200px);
+        }
+
+        .homepage-feature .flick-viewport {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <a href="lilah-index.html" class="brand-link">
+            <h1>Lilah Comerford</h1>
+        </a>
+        <nav class="site-nav">
+            <a href="lilah-editorial-and-commissions.html">Editorial and Commissions</a>
+            <a href="lilah-portfolio.html">Portfolio</a>
+        </nav>
+        <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="lilah-editorial-and-commissions.html">Editorial and Commissions</a>
+        <a href="lilah-portfolio.html">Portfolio</a>
+    </nav>
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+    <div class="container">
+        <div class="homepage-feature">
+            <!--
+                Single flick-through display, no title. Replace src / data-full
+                and the pswp width/height with the real image dimensions.
+                Add or remove .flick-slide blocks as needed — the script
+                below auto-detects however many are present.
+            -->
+            <div class="flick-viewport">
+                <div class="flick-track">
+                    <div class="flick-slide"
+                         data-full="media/img20240419_15473705.jpg"
+                         data-pswp-width="1000" data-pswp-height="807">
+                        <img src="media/img20240419_15473705.jpg" alt="Homepage image 1">
+                    </div>
+                    <div class="flick-slide"
+                         data-full="media/IMG_0285.jpg"
+                         data-pswp-width="1000" data-pswp-height="1222">
+                        <img src="media/IMG_0285.jpg" alt="Homepage image 2">
+                    </div>
+                    <div class="flick-slide"
+                         data-full="media/jude-and-theo--11.jpg"
+                         data-pswp-width="1000" data-pswp-height="1204">
+                        <img src="media/jude-and-theo--11.jpg" alt="Homepage image 3">
+                    </div>
+                    <div class="flick-slide"
+                         data-full="media/upchuck-18.jpg"
+                         data-pswp-width="1000" data-pswp-height="1226">
+                        <img src="media/upchuck-18.jpg" alt="Homepage image 4">
+                    </div>
+                    <div class="flick-slide"
+                         data-full="media/img20250312_18515403.jpg"
+                         data-pswp-width="1000" data-pswp-height="1222">
+                        <img src="media/img20250312_18515403.jpg" alt="Homepage image 5">
+                    </div>
+                    <div class="flick-slide"
+                         data-full="media/img20241202_14043003-2.jpg"
+                         data-pswp-width="1000" data-pswp-height="1200">
+                        <img src="media/img20241202_14043003-2.jpg" alt="Homepage image 6">
+                    </div>
+                    <div class="flick-slide"
+                         data-full="media/Francesca-and-Josefina.jpg"
+                         data-pswp-width="1000" data-pswp-height="771">
+                        <img src="media/Francesca-and-Josefina.jpg" alt="Francesca and Josefina">
+                    </div>
+                    <div class="flick-slide"
+                         data-full="media/lilah-and-sofia.jpg"
+                         data-pswp-width="1000" data-pswp-height="1075">
+                        <img src="media/lilah-and-sofia.jpg" alt="Lilah and Sofia">
+                    </div>
+                    <div class="flick-slide"
+                         data-full="media/79730003.jpeg"
+                         data-pswp-width="1000" data-pswp-height="1075">
+                        <img src="media/79730003.jpeg" alt="Lilah and Sofia">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Official PhotoSwipe JavaScript -->
+    <script type="module">
+        import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5/dist/photoswipe-lightbox.esm.js';
+
+        const lightbox = new PhotoSwipeLightbox({
+            pswpModule: () => import('https://unpkg.com/photoswipe@5/dist/photoswipe.esm.js'),
+            bgOpacity: 1,
+        });
+        lightbox.init();
+
+        // Set up every flick-through strip on the page independently.
+        document.querySelectorAll('.flick-viewport').forEach((viewport) => {
+            const track = viewport.querySelector('.flick-track');
+            const slides = Array.from(viewport.querySelectorAll('.flick-slide'));
+            let current = 0;
+
+            const pswpItems = slides.map((slide) => ({
+                src: slide.dataset.full,
+                w: parseInt(slide.dataset.pswpWidth, 10),
+                h: parseInt(slide.dataset.pswpHeight, 10),
+            }));
+
+            function goTo(index) {
+                current = index;
+                track.style.transform = `translateX(-${slides[index].offsetLeft}px)`;
+            }
+
+            slides.forEach((slide, i) => {
+                slide.addEventListener('click', () => {
+                    if (i === current) {
+                        // Already fully in view — open it full-screen instead.
+                        lightbox.loadAndOpen(i, pswpItems);
+                    } else {
+                        goTo(i);
+                    }
+                });
+            });
+
+            goTo(0);
+
+            // Re-measure on resize so the active slide stays flush left.
+            window.addEventListener('resize', () => goTo(current));
+        });
+
+        // --- Mobile nav drawer ---
+        const navToggle = document.getElementById('navToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+
+        function openNav() {
+            document.body.classList.add('nav-open');
+            mobileNav.classList.add('is-open');
+            navToggle.setAttribute('aria-expanded', 'true');
+        }
+        function closeNav() {
+            document.body.classList.remove('nav-open');
+            mobileNav.classList.remove('is-open');
+            navToggle.setAttribute('aria-expanded', 'false');
+        }
+
+        navToggle.addEventListener('click', () => {
+            document.body.classList.contains('nav-open') ? closeNav() : openNav();
+        });
+        mobileNavOverlay.addEventListener('click', closeNav);
+        mobileNav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeNav));
+    </script>
+</body>
+</html>

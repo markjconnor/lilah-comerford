@@ -1,0 +1,116 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background-color: #ffffff;
+    color: #333333;
+    font-family: 'Playfair Display', serif;
+    line-height: 1.6;
+    padding: 20px 40px 40px 40px;
+}
+
+.container { max-width: 1200px; margin: 0 auto; }
+
+/* --- Header: name on top, navigation stacked underneath, all left-aligned --- */
+.site-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 50px;
+}
+
+.site-header .brand-link { text-decoration: none; color: inherit; }
+.site-header h1 { font-size: 1.5rem; font-weight: 500; line-height: 1.2; }
+
+.site-nav { display: flex; flex-direction: column; gap: 4px; }
+.site-nav a {
+    text-decoration: none;
+    color: #333333;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+}
+.site-nav a:hover,
+.site-nav a[aria-current="page"] { color: #999999; }
+
+@media (max-width: 600px) {
+    body { padding: 16px 20px 30px 20px; }
+    .site-header { margin-bottom: 30px; }
+}
+
+/* --- PhotoSwipe white lightbox --- */
+.pswp {
+    --pswp-bg: #ffffff;
+    --pswp-icon-color: #333333;
+    --pswp-icon-color-secondary: #666666;
+}
+.pswp__img, .pswp__img--placeholder { background-color: #ffffff !important; }
+
+/* --- Photo grid (People + Kindred Language) ---
+   Column-based masonry: photos keep their own aspect ratio,
+   4 per row on wide screens, 3 on medium, 2 on small. */
+.photo-grid { column-count: 4; column-gap: 12px; }
+.photo-grid a { display: block; margin-bottom: 12px; break-inside: avoid; cursor: pointer; }
+.photo-grid img { display: block; width: 100%; height: auto; }
+
+@media (max-width: 1000px) { .photo-grid { column-count: 3; } }
+@media (max-width: 600px)  { .photo-grid { column-count: 2; column-gap: 8px; } .photo-grid a { margin-bottom: 8px; } }
+
+/* --- About --- */
+.about { max-width: 640px; color: #000000; font-size: 1rem; }
+.about p + p { margin-top: 1.4em; }
+.about a { color: #000000; text-decoration: underline; }
+
+/* --- Editorial: flick-through strips --- */
+.projects-list { display: flex; flex-direction: column; gap: 70px; }
+.project-title { font-size: 1.4rem; font-weight: 500; margin-bottom: 16px; text-align: center; }
+
+.flick-viewport {
+    position: relative;
+    overflow: hidden;
+    height: min(65vh, 600px);
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.flick-track {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 8px;
+    transition: transform 0.6s ease;
+    will-change: transform;
+}
+.flick-slide { flex-shrink: 0; height: 100%; cursor: pointer; }
+.flick-slide img {
+    height: 100%; width: auto; display: block;
+    user-select: none; -webkit-user-drag: none;
+}
+
+/* --- Home slideshow --- */
+.slideshow {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 230px);
+    min-height: 360px;
+    overflow: hidden;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.slideshow img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    pointer-events: none;
+}
+.slideshow img.is-active { opacity: 1; }
+.slideshow .zone { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 2; background: none; border: none; }
+.slideshow .zone-prev { left: 0;  cursor: w-resize; }
+.slideshow .zone-next { right: 0; cursor: e-resize; }
+.slideshow .zone:focus-visible { outline: 1px solid #999999; outline-offset: -4px; }
+@media (prefers-reduced-motion: reduce) { .slideshow img { transition: none; } }

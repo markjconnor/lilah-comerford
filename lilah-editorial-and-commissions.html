@@ -12,12 +12,25 @@
     <header class="site-header">
         <a href="index.html" class="brand-link"><h1>Lilah Comerford</h1></a>
         <nav class="site-nav">
-            <a href="lilah-editorial-and-commissions.html" aria-current="page">Editorial and Commissions</a>
+            <a href="lilah-editorial-and-commissions.html">Editorial and Commissions</a>
             <a href="lilah-people.html">People</a>
             <a href="lilah-kindred-language.html">Kindred Language</a>
             <a href="lilah-about.html">About</a>
         </nav>
+        <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </header>
+
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="lilah-editorial-and-commissions.html">Editorial and Commissions</a>
+        <a href="lilah-people.html">People</a>
+        <a href="lilah-kindred-language.html">Kindred Language</a>
+        <a href="lilah-about.html">About</a>
+    </nav>
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
 
     <div class="container">
         <div class="projects-list">
@@ -136,6 +149,29 @@
             goTo(0);
             window.addEventListener('resize', () => goTo(current));
         });
+    </script>
+    <script>
+        // --- Mobile nav drawer ---
+        const navToggle = document.getElementById('navToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+
+        function openNav() {
+            document.body.classList.add('nav-open');
+            mobileNav.classList.add('is-open');
+            navToggle.setAttribute('aria-expanded', 'true');
+        }
+        function closeNav() {
+            document.body.classList.remove('nav-open');
+            mobileNav.classList.remove('is-open');
+            navToggle.setAttribute('aria-expanded', 'false');
+        }
+
+        navToggle.addEventListener('click', () => {
+            document.body.classList.contains('nav-open') ? closeNav() : openNav();
+        });
+        mobileNavOverlay.addEventListener('click', closeNav);
+        mobileNav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeNav));
     </script>
 </body>
 </html>

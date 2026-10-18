@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editorial and Commissions | Lilah Comerford</title>
+    <title>Editorial and Commissions | Lilah Culliford</title>
     <link rel="stylesheet" href="https://unpkg.com/photoswipe@5/dist/photoswipe.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=supreme@300,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="editorial">
     <header class="site-header">
-        <a href="index.html" class="brand-link"><h1>Lilah Comerford</h1></a>
+        <a href="index.html" class="brand-link"><h1>Lilah Culliford</h1></a>
         <nav class="site-nav">
             <a href="lilah-editorial-and-commissions.html">Editorial and Commissions</a>
             <a href="lilah-people.html">People</a>
@@ -39,10 +39,10 @@
                 PROJECT TEMPLATE
                 =================
                 1. Replace the h2 text with the project/shoot name.
-                2. Add one .flick-slide per image inside .flick-track — any
+                2. Add one .flick-slide per image inside .flick-track, any
                    number, and each can be a totally different aspect ratio.
-                3. Fill in data-pswp-width / data-pswp-height with each full-size
-                   image's real pixel dimensions (required for PhotoSwipe zoom).
+                3. Set data-full to the full-size image (it can be the same file
+                   as the img src). Image dimensions are read automatically.
                 4. Clicking a peeking image slides it into view; clicking the
                    fully-visible image opens the full project set full-screen.
             -->
@@ -52,30 +52,18 @@
                 <h2 class="project-title">Editorial Name One</h2>
                 <div class="flick-viewport">
                     <div class="flick-track">
-
-                        <div class="flick-slide"
-                             data-full="media/2-copy.jpg" 
-                             data-pswp-width="2616" data-pswp-height="2616">
-                            <img src="media/2-copy.jpg" alt="Editorial One, image 1">
+                        <div class="flick-slide" data-full="media/img20240419_15473705.jpg">
+                            <img src="media/img20240419_15473705.jpg" alt="Editorial One, image 1">
                         </div>
-                        <div class="flick-slide"
-                             data-full="media/khora-for-web2000x2000.png"
-                             data-pswp-width="2616" data-pswp-height="2616">
-                            <img src="media/khora-for-web.png" alt="Editorial One, image 2">
+                        <div class="flick-slide" data-full="media/IMG_0285.jpg">
+                            <img src="media/IMG_0285.jpg" alt="Editorial One, image 2">
                         </div>
-                        <div class="flick-slide"
-                             data-full="media/MagicEraser_260717_112449-2000x2000.jpeg"
-                             data-pswp-width="2616" data-pswp-height="2616">
-                            <img src="media/MagicEraser_260717_112449.jpeg" alt="Editorial One, image 3">
+                        <div class="flick-slide" data-full="media/jude-and-theo--11.jpg">
+                            <img src="media/jude-and-theo--11.jpg" alt="Editorial One, image 3">
                         </div>
-                        <div class="flick-slide"
-                             data-full="media/soft-s-for-web2000x2000.png"
-                             data-pswp-width="2616" data-pswp-height="2616">
-                            <img src="media/soft-s-for-web.png" alt="Editorial One, image 4">
+                        <div class="flick-slide" data-full="media/upchuck-18.jpg">
+                            <img src="media/upchuck-18.jpg" alt="Editorial One, image 4">
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
@@ -85,20 +73,14 @@
                 <h2 class="project-title">Editorial Name Two</h2>
                 <div class="flick-viewport">
                     <div class="flick-track">
-                        <div class="flick-slide"
-                             data-full="media/khora-for-web2000x2000.png"
-                             data-pswp-width="2616" data-pswp-height="2616">
-                            <img src="media/khora-for-web.png" alt="Editorial Two, image 1">
+                        <div class="flick-slide" data-full="media/Francesca-and-Josefina.jpg">
+                            <img src="media/Francesca-and-Josefina.jpg" alt="Editorial Two, image 1">
                         </div>
-                        <div class="flick-slide"
-                             data-full="media/soft-s-for-web2000x2000.png"
-                             data-pswp-width="2616" data-pswp-height="2616">
-                            <img src="media/soft-s-for-web.png" alt="Editorial Two, image 2">
+                        <div class="flick-slide" data-full="media/lilah-and-sofia.jpg">
+                            <img src="media/lilah-and-sofia.jpg" alt="Editorial Two, image 2">
                         </div>
-                        <div class="flick-slide"
-                             data-full="media/contact-for-web2000x2000.png"
-                             data-pswp-width="2616" data-pswp-height="2616">
-                            <img src="media/contact-for-web.png" alt="Editorial Two, image 3">
+                        <div class="flick-slide" data-full="media/79730003.jpeg">
+                            <img src="media/79730003.jpeg" alt="Editorial Two, image 3">
                         </div>
                     </div>
                 </div>
@@ -125,11 +107,11 @@
             const slides = Array.from(viewport.querySelectorAll('.flick-slide'));
             let current = 0;
 
-            const pswpItems = slides.map((slide) => ({
-                src: slide.dataset.full,
-                w: parseInt(slide.dataset.pswpWidth, 10),
-                h: parseInt(slide.dataset.pswpHeight, 10),
-            }));
+            // Built at click time so the images' real dimensions are available.
+            const buildItems = () => slides.map((slide) => {
+                const img = slide.querySelector('img');
+                return { src: slide.dataset.full, w: img.naturalWidth || 1500, h: img.naturalHeight || 1500 };
+            });
 
             function goTo(index) {
                 current = index;
@@ -139,39 +121,19 @@
             slides.forEach((slide, i) => {
                 slide.addEventListener('click', () => {
                     if (i === current) {
-                        lightbox.loadAndOpen(i, pswpItems);
+                        lightbox.loadAndOpen(i, buildItems());
                     } else {
                         goTo(i);
                     }
                 });
             });
 
+            // Slide widths change as images load, so re-align the strip each time.
+            slides.forEach((slide) => slide.querySelector('img').addEventListener('load', () => goTo(current)));
             goTo(0);
             window.addEventListener('resize', () => goTo(current));
         });
     </script>
-    <script>
-        // --- Mobile nav drawer ---
-        const navToggle = document.getElementById('navToggle');
-        const mobileNav = document.getElementById('mobileNav');
-        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
-
-        function openNav() {
-            document.body.classList.add('nav-open');
-            mobileNav.classList.add('is-open');
-            navToggle.setAttribute('aria-expanded', 'true');
-        }
-        function closeNav() {
-            document.body.classList.remove('nav-open');
-            mobileNav.classList.remove('is-open');
-            navToggle.setAttribute('aria-expanded', 'false');
-        }
-
-        navToggle.addEventListener('click', () => {
-            document.body.classList.contains('nav-open') ? closeNav() : openNav();
-        });
-        mobileNavOverlay.addEventListener('click', closeNav);
-        mobileNav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeNav));
-    </script>
+    <script src="nav.js"></script>
 </body>
 </html>

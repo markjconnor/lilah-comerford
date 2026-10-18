@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | Lilah Comerford</title>
+    <title>About | Lilah Culliford</title>
     <link rel="stylesheet" href="https://unpkg.com/photoswipe@5/dist/photoswipe.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=supreme@300,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="site-header">
-        <a href="index.html" class="brand-link"><h1>Lilah Comerford</h1></a>
+        <a href="index.html" class="brand-link"><h1>Lilah Culliford</h1></a>
         <nav class="site-nav">
             <a href="lilah-editorial-and-commissions.html">Editorial and Commissions</a>
             <a href="lilah-people.html">People</a>
@@ -35,33 +35,11 @@
     <div class="container">
         <!-- Placeholder copy: replace with your own text. -->
         <div class="about">
-            <p>Lilah Comerford is ...</p>
+            <p>Lilah Culliford is ...</p>
             <p></p>
             <p>Email – <a href="mailto:">youremail@email.com</a></p>
         </div>
     </div>
-    <script>
-        // --- Mobile nav drawer ---
-        const navToggle = document.getElementById('navToggle');
-        const mobileNav = document.getElementById('mobileNav');
-        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
-
-        function openNav() {
-            document.body.classList.add('nav-open');
-            mobileNav.classList.add('is-open');
-            navToggle.setAttribute('aria-expanded', 'true');
-        }
-        function closeNav() {
-            document.body.classList.remove('nav-open');
-            mobileNav.classList.remove('is-open');
-            navToggle.setAttribute('aria-expanded', 'false');
-        }
-
-        navToggle.addEventListener('click', () => {
-            document.body.classList.contains('nav-open') ? closeNav() : openNav();
-        });
-        mobileNavOverlay.addEventListener('click', closeNav);
-        mobileNav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeNav));
-    </script>
+    <script src="nav.js"></script>
 </body>
 </html>

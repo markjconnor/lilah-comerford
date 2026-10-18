@@ -3,7 +3,7 @@
 body {
     background-color: #ffffff;
     color: #333333;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Supreme', serif;
     line-height: 1.6;
     padding: 20px 40px 40px 40px;
 }
@@ -16,7 +16,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 40px;
     margin-bottom: 50px;
 }
 
@@ -159,3 +159,28 @@ body.nav-open .mobile-nav-overlay { display: block; }
 .slideshow .zone-prev { left: 0;  cursor: w-resize; }
 .slideshow .zone-next { right: 0; cursor: e-resize; }
 .slideshow .zone:focus-visible { outline: 1px solid #999999; outline-offset: -4px; }
+/* --- People, Kindred Language + Editorial: content starts to the right of the nav links --- */
+.gallery .container, .editorial .container { margin-left: 16rem; margin-right: 0; }
+@media (max-width: 600px) {
+    .gallery .container, .editorial .container { margin-left: 0; }
+}
+
+/* --- Editorial on mobile: compact name, small uppercase titles, inset 8:5 image strips --- */
+@media (max-width: 600px) {
+    .editorial .site-header { margin-bottom: 60px; }
+    .editorial .site-header h1 { font-size: 1.1rem; font-weight: 500; text-transform: uppercase; }
+    .editorial .projects-list { gap: 30px; }
+    .editorial .project-title {
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        margin-bottom: 16px;
+    }
+    .editorial .flick-viewport {
+        width: 72%;
+        height: auto;
+        aspect-ratio: 8 / 5;
+    }
+    .editorial .flick-track { gap: 0; }
+}

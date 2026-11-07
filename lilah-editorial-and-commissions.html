@@ -33,106 +33,75 @@
     <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
 
     <div class="container">
-        <div class="projects-list">
-
-            <!--
-                PROJECT TEMPLATE
-                =================
-                1. Replace the h2 text with the project/shoot name.
-                2. Add one .flick-slide per image inside .flick-track, any
-                   number, and each can be a totally different aspect ratio.
-                3. Set data-full to the full-size image (it can be the same file
-                   as the img src). Image dimensions are read automatically.
-                4. Clicking a peeking image slides it into view; clicking the
-                   fully-visible image opens the full project set full-screen.
-            -->
-
-            <!-- Project 1 -->
-            <div class="project">
-                <h2 class="project-title">Editorial Name One</h2>
-                <div class="flick-viewport">
-                    <div class="flick-track">
-                        <div class="flick-slide" data-full="media/img20240419_15473705.jpg">
-                            <img src="media/img20240419_15473705.jpg" alt="Editorial One, image 1">
-                        </div>
-                        <div class="flick-slide" data-full="media/IMG_0285.jpg">
-                            <img src="media/IMG_0285.jpg" alt="Editorial One, image 2">
-                        </div>
-                        <div class="flick-slide" data-full="media/jude-and-theo--11.jpg">
-                            <img src="media/jude-and-theo--11.jpg" alt="Editorial One, image 3">
-                        </div>
-                        <div class="flick-slide" data-full="media/upchuck-18.jpg">
-                            <img src="media/upchuck-18.jpg" alt="Editorial One, image 4">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Project 2 -->
-            <div class="project">
-                <h2 class="project-title">Editorial Name Two</h2>
-                <div class="flick-viewport">
-                    <div class="flick-track">
-                        <div class="flick-slide" data-full="media/Francesca-and-Josefina.jpg">
-                            <img src="media/Francesca-and-Josefina.jpg" alt="Editorial Two, image 1">
-                        </div>
-                        <div class="flick-slide" data-full="media/lilah-and-sofia.jpg">
-                            <img src="media/lilah-and-sofia.jpg" alt="Editorial Two, image 2">
-                        </div>
-                        <div class="flick-slide" data-full="media/79730003.jpeg">
-                            <img src="media/79730003.jpeg" alt="Editorial Two, image 3">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Add more projects -->
-
-        </div>
+        <!-- Content injected dynamically via CMS data -->
+        <div class="projects-list"></div>
     </div>
 
-    <!-- Official PhotoSwipe JavaScript -->
     <script type="module">
         import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5/dist/photoswipe-lightbox.esm.js';
 
-        const lightbox = new PhotoSwipeLightbox({
-            pswpModule: () => import('https://unpkg.com/photoswipe@5/dist/photoswipe.esm.js'),
-            bgOpacity: 1,
-        });
-        lightbox.init();
+        async function loadEditorial() {
+            try {
+                const res = await fetch('data/editorial.json');
+                const data = await res.json();
+                const container = document.querySelector('.projects-list');
 
-        // Set up every flick-through strip on the page independently.
-        document.querySelectorAll('.flick-viewport').forEach((viewport) => {
-            const track = viewport.querySelector('.flick-track');
-            const slides = Array.from(viewport.querySelectorAll('.flick-slide'));
-            let current = 0;
+                data.projects.forEach(project => {
+                    let slidesHtml = '';
+                    project.images.forEach(imgUrl => {
+                        slidesHtml += `
+                            <div class="flick-slide" data-full="${imgUrl}">
+                                <img src="${imgUrl}" alt="${project.title} image">
+                            </div>`;
+                    });
 
-            // Built at click time so the images' real dimensions are available.
-            const buildItems = () => slides.map((slide) => {
-                const img = slide.querySelector('img');
-                return { src: slide.dataset.full, w: img.naturalWidth || 1500, h: img.naturalHeight || 1500 };
-            });
-
-            function goTo(index) {
-                current = index;
-                track.style.transform = `translateX(-${slides[index].offsetLeft}px)`;
-            }
-
-            slides.forEach((slide, i) => {
-                slide.addEventListener('click', () => {
-                    if (i === current) {
-                        lightbox.loadAndOpen(i, buildItems());
-                    } else {
-                        goTo(i);
-                    }
+                    container.innerHTML += `
+                        <div class="project">
+                            <h2 class="project-title">${project.title}</h2>
+                            <div class="flick-viewport">
+                                <div class="flick-track">${slidesHtml}</div>
+                            </div>
+                        </div>`;
                 });
-            });
 
-            // Slide widths change as images load, so re-align the strip each time.
-            slides.forEach((slide) => slide.querySelector('img').addEventListener('load', () => goTo(current)));
-            goTo(0);
-            window.addEventListener('resize', () => goTo(current));
-        });
+                const lightbox = new PhotoSwipeLightbox({
+                    pswpModule: () => import('https://unpkg.com/photoswipe@5/dist/photoswipe.esm.js'),
+                    bgOpacity: 1,
+                });
+                lightbox.init();
+
+                document.querySelectorAll('.flick-viewport').forEach((viewport) => {
+                    const track = viewport.querySelector('.flick-track');
+                    const slides = Array.from(viewport.querySelectorAll('.flick-slide'));
+                    let current = 0;
+
+                    const buildItems = () => slides.map((slide) => {
+                        const img = slide.querySelector('img');
+                        return { src: slide.dataset.full, w: img.naturalWidth || 1500, h: img.naturalHeight || 1500 };
+                    });
+
+                    function goTo(index) {
+                        current = index;
+                        track.style.transform = `translateX(-${slides[index].offsetLeft}px)`;
+                    }
+
+                    slides.forEach((slide, i) => {
+                        slide.addEventListener('click', () => {
+                            if (i === current) {
+                                lightbox.loadAndOpen(i, buildItems());
+                            } else {
+                                goTo(i);
+                            }
+                        });
+                        slide.querySelector('img').addEventListener('load', () => goTo(current));
+                    });
+                    
+                    if(slides.length > 0) goTo(0);
+                    window.addEventListener('resize', () => goTo(current));
+                });
+            } catch (e) { console.error("CMS data not found yet", e); }
+        }
+        loadEditorial();
     </script>
     <script src="nav.js"></script>
 </body>

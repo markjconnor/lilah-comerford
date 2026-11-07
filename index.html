@@ -33,47 +33,57 @@
     <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
 
     <div class="container">
-        <!-- Click the left half for the previous image, the right half for the next. Arrow keys work too. -->
+        <!-- Images injected dynamically via CMS data -->
         <div class="slideshow" id="slideshow">
-            <img src="media/img20240419_15473705.jpg" alt="Homepage image 1" class="is-active">
-            <img src="media/IMG_0285.jpg" alt="Homepage image 2">
-            <img src="media/jude-and-theo--11.jpg" alt="Homepage image 3">
-            <img src="media/upchuck-18.jpg" alt="Homepage image 4">
-            <img src="media/img20250312_18515403.jpg" alt="Homepage image 5">
-            <img src="media/img20241202_14043003-2.jpg" alt="Homepage image 6">
-            <img src="media/Francesca-and-Josefina.jpg" alt="Homepage image 7">
-            <img src="media/lilah-and-sofia.jpg" alt="Homepage image 8">
-            <img src="media/79730003.jpeg" alt="Homepage image 9">
             <button class="zone zone-prev" aria-label="Previous image"></button>
             <button class="zone zone-next" aria-label="Next image"></button>
         </div>
     </div>
 
     <script>
-        const INTERVAL = 2500;
-        const slides = Array.from(document.querySelectorAll('#slideshow img'));
-        let current = 0;
-        let timer;
+        async function loadHomepage() {
+            try {
+                const res = await fetch('data/homepage.json');
+                const data = await res.json();
+                const slideshow = document.getElementById('slideshow');
+                const prevBtn = slideshow.querySelector('.zone-prev');
+                
+                data.images.forEach((imgUrl, i) => {
+                    const img = document.createElement('img');
+                    img.src = imgUrl;
+                    img.alt = `Homepage image ${i + 1}`;
+                    if (i === 0) img.classList.add('is-active');
+                    slideshow.insertBefore(img, prevBtn);
+                });
 
-        function show(i) {
-            slides[current].classList.remove('is-active');
-            current = (i + slides.length) % slides.length;
-            slides[current].classList.add('is-active');
-        }
-        // Restarts the 3-second countdown; called after every manual click.
-        function startTimer() {
-            clearInterval(timer);
-            timer = setInterval(() => show(current + 1), INTERVAL);
-        }
-        function go(step) { show(current + step); startTimer(); }
+                // Initialize slider logic
+                const INTERVAL = 2500;
+                const slides = Array.from(document.querySelectorAll('#slideshow img'));
+                let current = 0, timer;
 
-        document.querySelector('.zone-next').addEventListener('click', () => go(1));
-        document.querySelector('.zone-prev').addEventListener('click', () => go(-1));
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') go(1);
-            if (e.key === 'ArrowLeft') go(-1);
-        });
-        startTimer();
+                function show(i) {
+                    if (slides.length === 0) return;
+                    slides[current].classList.remove('is-active');
+                    current = (i + slides.length) % slides.length;
+                    slides[current].classList.add('is-active');
+                }
+                function startTimer() {
+                    clearInterval(timer);
+                    timer = setInterval(() => show(current + 1), INTERVAL);
+                }
+                function go(step) { show(current + step); startTimer(); }
+
+                document.querySelector('.zone-next').addEventListener('click', () => go(1));
+                document.querySelector('.zone-prev').addEventListener('click', () => go(-1));
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowRight') go(1);
+                    if (e.key === 'ArrowLeft') go(-1);
+                });
+                
+                if (slides.length > 0) startTimer();
+            } catch (e) { console.error("CMS data not found yet", e); }
+        }
+        loadHomepage();
     </script>
     <script src="nav.js"></script>
 </body>

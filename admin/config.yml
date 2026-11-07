@@ -1,7 +1,8 @@
 backend:
   name: github
   repo: markjconnor/lilah-comerford
-  branch: main 
+  branch: main
+  site_domain: lustrous-mousse-ae2cec.netlify.app
 
 media_folder: "media"
 public_folder: "media"
@@ -14,20 +15,35 @@ collections:
         name: "homepage"
         file: "data/homepage.json"
         fields:
-          - {label: "Images", name: "images", widget: "list", field: {label: "Image", name: "image", widget: "image"}}
-      
+          - {
+              label: "Images",
+              name: "images",
+              widget: "list",
+              field: { label: "Image", name: "image", widget: "image" },
+            }
+
       - label: "People Gallery"
         name: "people"
         file: "data/people.json"
         fields:
-          - {label: "Images", name: "images", widget: "list", field: {label: "Image", name: "image", widget: "image"}}
-          
+          - {
+              label: "Images",
+              name: "images",
+              widget: "list",
+              field: { label: "Image", name: "image", widget: "image" },
+            }
+
       - label: "Kindred Language Gallery"
         name: "kindred"
         file: "data/kindred.json"
         fields:
-          - {label: "Images", name: "images", widget: "list", field: {label: "Image", name: "image", widget: "image"}}
-          
+          - {
+              label: "Images",
+              name: "images",
+              widget: "list",
+              field: { label: "Image", name: "image", widget: "image" },
+            }
+
       - label: "Editorial and Commissions"
         name: "editorial"
         file: "data/editorial.json"
@@ -36,5 +52,10 @@ collections:
             name: "projects"
             widget: "list"
             fields:
-              - {label: "Project Title", name: "title", widget: "string"}
-              - {label: "Images", name: "images", widget: "list", field: {label: "Image", name: "image", widget: "image"}}
+              - { label: "Project Title", name: "title", widget: "string" }
+              - {
+                  label: "Images",
+                  name: "images",
+                  widget: "list",
+                  field: { label: "Image", name: "image", widget: "image" },
+                }
